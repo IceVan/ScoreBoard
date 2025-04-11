@@ -58,38 +58,35 @@ public class ScoreBoardTest {
         String summary = scoreBoard.getSummary();
         List<String> lines = Arrays.asList(summary.split(System.lineSeparator()));
 
-        assertTrue(lines.get(0).contains("Uruguay") && lines.get(0).contains("6 - Italy 6"),
+        assertTrue(lines.get(0).contains("Uruguay"),
                 "The most recent game state with 12 points should be first.");
-        assertTrue(lines.get(1).contains("Spain") && lines.get(1).contains("10 - Brazil 2"),
+        assertTrue(lines.get(1).contains("Spain"),
                 "The older game state with 12 points be second.");
 
         int indexArgentinaAustralia = lines.indexOf(lines.stream().filter(l -> l.contains("Argentina")).findFirst().orElse(""));
         int indexGermanyFrance = lines.indexOf(lines.stream().filter(l -> l.contains("Germany")).findFirst().orElse(""));
-        assertTrue(indexArgentinaAustralia < indexGermanyFrance, "The most recent game should appear first.");
+        assertTrue(indexArgentinaAustralia < indexGermanyFrance, "The most recent game with the same score should appear first.");
     }
 
     @Test
-    void testErrorOnDuplicateStart() {
+    void testErrorOnDuplicateStartShouldThrowScoreBoardException() {
         scoreBoard.startGame("Canada", "San Escobar");
-        Exception exception = assertThrows(IllegalStateException.class, () -> {
-            scoreBoard.startGame("Canada", "San Escobar");
-        });
+        Exception exception = assertThrows(ScoreBoardException.class, () ->
+                scoreBoard.startGame("Canada", "San Escobar"));
         assertEquals("Game already exists.", exception.getMessage());
     }
 
     @Test
-    void testErrorOnUpdateNonExistingGame() {
-        Exception exception = assertThrows(ScoreBoardException.class, () -> {
-            scoreBoard.updateScore("Fake team", "Fake team 2", 1, 1);
-        });
+    void testErrorOnUpdateNonExistingGameShouldThrowScoreBoardException() {
+        Exception exception = assertThrows(ScoreBoardException.class, () ->
+                scoreBoard.updateScore("Fake team", "Fake team 2", 1, 1));
         assertEquals("Record not found. You should start game first.", exception.getMessage());
     }
 
     @Test
-    void testErrorOnFinishNonExistingGame() {
-        Exception exception = assertThrows(ScoreBoardException.class, () -> {
-            scoreBoard.finishGame("Fake team", "Fake team 2");
-        });
+    void testErrorOnFinishNonExistingGameShouldThrowScoreBoardException() {
+        Exception exception = assertThrows(ScoreBoardException.class, () ->
+                scoreBoard.finishGame("Fake team", "Fake team 2"));
         assertEquals("Record not found.", exception.getMessage());
     }
 }

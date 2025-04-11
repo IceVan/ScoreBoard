@@ -10,9 +10,9 @@ public class RecordTest {
 
     @ParameterizedTest
     @CsvSource({
-            "'Mexico', 'Canada', 0, 5, 'Mexico - Canada: 0 - 5'",
-            "'Germany', 'France', 2, 2, 'Germany - France: 2 - 2'",
-            "'Argentina', 'Canada', 3, 1, 'Argentina - Canada: 3 - 1'",
+            "'Mexico', 'Canada', 0, 5, 'Mexico 0 - Canada 5'",
+            "'Germany', 'France', 2, 2, 'Germany 2 - France 2'",
+            "'Argentina', 'Canada', 3, 1, 'Argentina 3 - Canada 1'",
     })
     public void testPrint(String home, String away, int scoreHome, int scoreAway, String expected) {
         var record = new Record(home, away, scoreHome, scoreAway);

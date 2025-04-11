@@ -11,6 +11,8 @@ public class Record implements Comparable<Record> {
 
     private final Integer scoreAway;
 
+    private final Long createdAt;
+
     public Record(String home, String away) {
         this(home, away, 0, 0);
     }
@@ -23,6 +25,7 @@ public class Record implements Comparable<Record> {
         this.away = away;
         this.scoreHome = scoreHome;
         this.scoreAway = scoreAway;
+        this.createdAt = System.nanoTime();
     }
 
     public String getHome() {
@@ -53,9 +56,22 @@ public class Record implements Comparable<Record> {
                 new Record(home, away, scoreHome, scoreAway) : this;
     }
 
+    public static int getHashFromValues(String home, String away){
+        return Objects.hash(home, away);
+    }
+
     @Override
     public int compareTo(Record o) {
-        return getCombinedScore().compareTo(o.getCombinedScore());
+        int cmp = Integer.compare(o.getCombinedScore().byteValue(), getCombinedScore());
+        if (cmp != 0) return cmp;
+
+        cmp = Long.compare(o.createdAt, createdAt);
+        if (cmp != 0) return cmp;
+
+        cmp = String.CASE_INSENSITIVE_ORDER.compare(o.getHome(), getHome());
+        if (cmp != 0) return cmp;
+
+        return String.CASE_INSENSITIVE_ORDER.compare(o.getAway(), getAway());
     }
 
     @Override
@@ -72,6 +88,6 @@ public class Record implements Comparable<Record> {
 
     @Override
     public String toString() {
-        return String.format("%s - %s: %d - %d", home, away, scoreHome, scoreAway);
+        return String.format("%s %d - %s %d", home, scoreHome, away, scoreAway);
     }
 }
